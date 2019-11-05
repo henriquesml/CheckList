@@ -1,23 +1,22 @@
 {
-  "name": "Lista",
+  "name": "ListApp",
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "android": "react-native run-android",
-    "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint ."
   },
   "dependencies": {
     "lottie-react-native": "^3.2.1",
-    "nvm": "^0.0.4",
-    "react": "16.9.0",
-    "react-native": "0.61.2",
-    "react-native-gesture-handler": "^1.4.1",
+    "react": "16.8.6",
+    "react-native": "0.60.0",
+    "react-native-gesture-handler": "^1.5.0",
     "react-native-linear-gradient": "^2.5.6",
+    "react-native-status-bar-height": "^2.4.0",
     "react-native-vector-icons": "^6.6.0",
-    "react-navigation": "^4.0.10"
+    "react-navigation": "^4.0.10",
+    "realm": "^3.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.6.4",
@@ -26,8 +25,8 @@
     "babel-jest": "^24.9.0",
     "eslint": "^6.6.0",
     "jest": "^24.9.0",
-    "metro-react-native-babel-preset": "^0.56.3",
-    "react-test-renderer": "16.9.0"
+    "metro-react-native-babel-preset": "^0.57.0",
+    "react-test-renderer": "16.8.6"
   },
   "jest": {
     "preset": "react-native"

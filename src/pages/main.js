@@ -1,152 +1,104 @@
 import React, { useState, useEffect } from 'react';
-import { AsyncStorage, View, StatusBar, KeyboardAvoidingView, Platform, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome'
+import LinearGradient from 'react-native-linear-gradient';
+import getRealm from '../RealmDB/realm'
+
 import Animacao from 'lottie-react-native'
-import vazio from './vazio.json'
+
+import ListName from '../components/ListName'
+
+import { getStatusBarHeight } from 'react-native-status-bar-height'
+const distancia = 30 + getStatusBarHeight(true)
 
 export default function Login({ navigation }) {
 
   const [lista, setLista] = useState([]);
 
-  const [aparecerBotao, setaparecerBotao] = useState(false);
-
   useEffect(() => {
 
     async function getList() {
-      var list = await AsyncStorage.getItem('Listas')
-      setLista( JSON.parse(list))
+
+      const realm = await getRealm()
+
+      const data = realm.objects('Listas')
+      
+      setLista(data)
+
+      console.log(lista)
 
     }getList()
-
-    if (lista != null) {
-
-      setaparecerBotao(false)
-
-    } else {
-      setaparecerBotao(true)
-    }
       
-  }, [lista])
-
-  async function handleSignout() {
-    await AsyncStorage.removeItem('Listas') }
+  }, [])
 
   return (
-    <KeyboardAvoidingView enabled={Platform.OS === 'ios'} behavior="padding" style={styles.container}>
-      <StatusBar backgroundColor="#DD0426" barStyle="light-content" />
 
-   
-        {lista != null ?  
-                            <>
-                            <FlatList                  
-                              data={lista}
-                              keyExtractor={list => list.key}
-                              renderItem={( {item} ) => (
-                                <View style={styles.box}> 
-                                  <Text style={styles.boxText}>{item.name}</Text>
-                                <TouchableOpacity >
-                                  <Icon name="check-square" size={30} color="#000" style={{alignSelf: 'center'}} />
-                                </TouchableOpacity>
-                                </View>
-                                
-                              )}
-                            /> 
+    <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 1}} colors={['#006992', '#0087BC']} style={styles.linearGradient}>
+        <Text style={styles.title} >Listas</Text>
 
-                            <TouchableOpacity onPress={handleSignout}>
-                                  <Text >Deletar</Text>
-                            </TouchableOpacity>
+          <View style={styles.form}>
+          <Text style={styles.title2}>Crie uma lista</Text>
+          <TouchableOpacity onPress={() => {navigation.navigate('List')}} style={styles.button}>
+            <Icon name="plus" size={18} color="#FFF"/>
+          </TouchableOpacity>
+        </View>
 
-                            </>
-                          : <View/>}
+        <FlatList style={styles.list}
+        data = {lista}
+        keyExtractor={ item => item.id }
+        contentContainerStyle={{paddingHorizontal: 20}}
+        showsHorizontalScrollIndicator={false}
+        renderItem={ ( { item } ) => (
 
+          <ListName data={item} />
 
-        {aparecerBotao?   
-                            <>
-                            <Animacao resizeMode='contain' autoSize source={vazio} autoPlay loop/>
-                            
-                            <View style={styles.Entrar} >
-                              <TouchableOpacity onPress={() => navigation.navigate('List')} >
-                                <Text style={styles.buttonText}>Cadastrar lista</Text>
-                              </TouchableOpacity>
-                            </View>
-                            </>
-                           : <View/>}
+        )}
+        
+        />
 
+    </LinearGradient>     
 
-        {aparecerBotao == false?  <TouchableOpacity onPress={() => navigation.navigate('List')} style={styles.confirmar}>
-                                    <Icon name="plus" size={18} color="#FFF" style={{alignSelf: 'center'}} />
-                                  </TouchableOpacity> : <View/>}
-
-      
-    </KeyboardAvoidingView>
   );
 }
 
 
 const styles = StyleSheet.create({
-  container: {
+  linearGradient: {
     flex:1,
-    justifyContent: 'center',
-    alignItems: 'center'
+    paddingTop: distancia
   },
-  box: {
-    alignItems: 'center', 
-    flexDirection: "row",
-    height: 100,
-    backgroundColor: '#E9e9e9',
-    paddingHorizontal: 20,
-  },
-  boxText: {
-    fontSize: 25,
-    color: '#000',
-    width: '95%'
-   
-  },
-  check: {
-
-  },
-  label: {
-    fontWeight: 'bold',
-    color: '#444',
-    marginBottom: 8
-  },
-  Input: {
-    borderWidth: 1,
-    borderColor: '#DDD',
-    paddingHorizontal: 20,
-    fontSize: 15,
-    color: '#444',
-    height: 44,
-    marginBottom: 20,
-    borderRadius: 2
-  },
-  Entrar: {
-    height: 40,
-    width: '65%',
-    backgroundColor: '#DD0426',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 5,
-    marginBottom: 15
-  },
-  buttonText: {
+  title: {
+    fontSize: 32,
     color: '#FFF',
     fontWeight: 'bold',
-    fontSize: 15,
-  },
-  confirmar: {
-    position: "absolute",
-    top: '90%',
-    left: '85%',
-    width: 50, 
-    height: 50, 
-    backgroundColor: '#DD0426',  
-    justifyContent: 'center', 
-    borderRadius: 30,
+    paddingHorizontal: 20
 
   },
-  TextConfirmar : {
-    alignSelf: 'center', 
-    
+  form: {
+    flexDirection: 'row',
+    marginTop: 10,
+    paddingHorizontal: 20
+
+  },
+  title2: {
+    flex: 1, 
+    padding: 12,
+    paddingHorizontal: 15,
+    borderRadius: 4,
+    fontSize: 16,
+    color: '#999',
+    backgroundColor: '#FFF'
+  },
+  button: {
+    backgroundColor: '#0090C9',
+    marginLeft: 10,
+    justifyContent: 'center',
+    borderRadius: 4,
+    paddingHorizontal: 20,
+    paddingVertical: 15
+  },
+  list : {
+    marginTop: 20,
+
   }
 });

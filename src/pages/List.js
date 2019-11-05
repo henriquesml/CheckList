@@ -1,94 +1,96 @@
 import React, { useState, useEffect } from 'react';
-import { View, StatusBar, KeyboardAvoidingView, Platform, Text, TextInput, FlatList, TouchableOpacity, StyleSheet, AsyncStorage, Keyboard, Alert } from 'react-native';
+import { View, Text, TextInput, FlatList, TouchableOpacity, StyleSheet, Keyboard, KeyboardAvoidingView, Platform, StatusBar } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome'
+import getRealm from '../RealmDB/realm'
+
+import { getStatusBarHeight } from 'react-native-status-bar-height'
+const distancia = 24 + getStatusBarHeight(true)
 
 export default function Login({ navigation }) {
-    const [task, setTask] = useState('');
-    const [List, setList] = useState('');
-    const [AllTask, setAllTask] = useState([]);
-    const [aparecerBotao, setaparecerBotao] = useState(false);
+  const [task, setTask] = useState('');
+  const [List, setList] = useState('');
+  const [AllTask, setAllTask] = useState([]);
+  const [aparecerBotao, setaparecerBotao] = useState(false);
+  const [color, setcolor] = useState('#006992');
 
-    useEffect(() => {
+  useEffect(() => {
 
-        if (AllTask.length > 0) {
+    if (AllTask.length > 0) {
 
-            setaparecerBotao(true)
+      setaparecerBotao(true)
 
-        } else {
+    } else {
 
-            setaparecerBotao(false)
-        }
-        
-    }, [AllTask])
+      setaparecerBotao(false)
+    }
+      
+  }, [AllTask])
 
-    function Additem(){
-        if (task.length > 0) {
-			setAllTask([...AllTask, { name: task, key: String(Date.now())}]);
-			setTask('');
-		}
+  function Additem(){
+      if (task.length > 0) {
+    setAllTask([...AllTask, { id: String(Date.now()), name: task}]);
+    console.log(AllTask)
+    setTask('');
+  }
 
-        Keyboard.dismiss()
-    };
+    Keyboard.dismiss()
+  };
 
 	Deletitem = id => {
       
 		setAllTask(
 			AllTask.filter(AllTask => {
-				if (AllTask.key !== id) return true;
+				if (AllTask.id !== id) return true;
 			})
         );
-	};
+  };
 
-    async function Submit() {
+  async function SaveList() {
+    const data = {
+      id: String(Date.now()),
+      name: List,
+      contents:  JSON.stringify(AllTask)
+    }
 
-      var final = []
+    const realm = await getRealm()
 
-      if (List != '') {
+    realm.write(() => {
+      realm.create('Listas', data)
+    })
 
-        final = [{
-          'name': List,
-          AllTask
-        }]
+  }
 
-      } else {
+  async function Submit() {
 
-        final = [{
-          "name": 'Lista',
-          AllTask
-        }]
-        
-      }
+    if (List != '') {
 
-      await AsyncStorage.setItem('Listas', JSON.stringify(final))
-        .then( ()=>{
-            Alert.alert(
-                "Lista Salva",
-                "Sua lista foi salva com sucesso!")
-            
-        } )
-        .catch( ()=>{
-            Alert.alert(
-                "Desculpe, ocorreu um erro :(",
-                "Tente novamente.")
-        } )
+      await SaveList()
+      navigation.navigate('Main')
 
-        if (AsyncStorage.getItem('Listas') != null) {
-          navigation.navigate('Main') 
-        }
-         
-    };
+    } else {
+      setcolor('#DD0426')
+    }
+
+
+  };
 
     return (
-        <KeyboardAvoidingView enabled={Platform.OS === 'ios'} behavior="padding" style={styles.container}>
-            <StatusBar backgroundColor="#DD0426" barStyle="light-content" />
-
+        <KeyboardAvoidingView enabled={Platform.OS === 'ios'} behavior="padding" style={styles.container}>  
+        <StatusBar backgroundColor="#0087BC" barStyle="light-content" />
             <View style={styles.Head}>
 
                 <TouchableOpacity onPress={() => {navigation.navigate('Main')}}>
-                    <Icon name="arrow-left" size={20} color="#FFF" />
+                    <Icon name="chevron-left" size={20} color="#FFF" />
                 </TouchableOpacity>
               
-                <View style={styles.boxhead} >
+                <View style={{    alignContent: 'center',
+                                  justifyContent: 'center',
+                                  borderWidth: 1,
+                                  borderColor: color,
+                                  backgroundColor: '#006992',
+                                  height: 40,
+                                  borderRadius: 2,
+                                  width: '70%'}} >
                   <TextInput 
                       style={styles.TexteHead}                    
                       onChangeText={setList}
@@ -101,10 +103,10 @@ export default function Login({ navigation }) {
                 </View>
                 
                 {aparecerBotao? <TouchableOpacity onPress={Submit}>
-                                  <Icon name="check-circle" size={25} color="#40D317" />
+                                  <Icon name="check" size={25} color="#36D800" />
                                 </TouchableOpacity> 
                                 
-                                : <Icon name="check-circle" size={25} color="#999999" />}
+                                : <Icon name="check" size={25} color="#999" />}
 
             </View>
 
@@ -122,7 +124,7 @@ export default function Login({ navigation }) {
                 <Text style={styles.Item}>
                   {item.name}
                 </Text>
-                <TouchableOpacity onPress={() => Deletitem(item.key)} >
+                <TouchableOpacity onPress={() => Deletitem(item.id)} >
                     <Icon name="trash" size={20} color="#DD0426" />
                 </TouchableOpacity>
             </View>}
@@ -135,12 +137,12 @@ export default function Login({ navigation }) {
               onSubmitEditing={Additem}
               value={task}
               placeholder="Adicione um item"
-              placeholderTextColor="#A6A6A8"
+              placeholderTextColor="#999"
               returnKeyType="done"
               returnKeyLabel="done"
           />
           <TouchableOpacity onPress={Additem}>
-              <Icon name="plus" size={20} color="#A6A6A8" />
+              <Icon name="plus" size={20} color="#999" />
           </TouchableOpacity>
           </View>
 
@@ -152,10 +154,12 @@ export default function Login({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex:1,
-    alignItems:  'center'
+    alignItems:  'center',
+    paddingTop: distancia,
+    backgroundColor: '#EEE',
   },
   Head: {
-    backgroundColor: '#DD0426',
+    backgroundColor: '#0087BC',
     height: '10%',
     width: "100%",
     flexDirection: "row",
@@ -165,14 +169,7 @@ const styles = StyleSheet.create({
 
   },
   boxhead: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: '#C10320',
-    backgroundColor: '#C10320',
-    height: 40,
-    borderRadius: 2,
-    width: '70%'
+
   },
   TexteHead: {
     fontSize: 15,
@@ -184,9 +181,11 @@ const styles = StyleSheet.create({
   AddTask: {  
     alignItems: 'center', 
     flexDirection: "row",
-    backgroundColor: '#E9e9e9',
+    backgroundColor: '#E0E0E0',
     paddingHorizontal: 20,
     height: 50,
+    borderWidth: 2,
+    borderColor: '#DDD',
     
   },
   textInput: {
@@ -198,12 +197,12 @@ const styles = StyleSheet.create({
   },
   Tasks: {  
     height: 55,
-    backgroundColor: '#DAD6D6',
+    backgroundColor: '#DDD',
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: 15,
-    marginBottom: 5,
+    marginBottom: 10,
   },
   Item : {
     fontSize: 16,
