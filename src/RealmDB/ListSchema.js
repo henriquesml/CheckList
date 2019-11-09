@@ -5,7 +5,7 @@ export default class ListSchema {
         properties: {
             id: 'string',
             name: 'string',
-            contents: 'string',          
+            contents: 'string[]',          
         }
     }
 }
