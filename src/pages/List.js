@@ -28,7 +28,7 @@ export default function Login({ navigation }) {
 
   function Additem(){
       if (task.length > 0) {
-    setAllTask([...AllTask, { id: String(Date.now()), name: task}]);
+    setAllTask([...AllTask, task]);
     console.log(AllTask)
     setTask('');
   }
@@ -40,7 +40,7 @@ export default function Login({ navigation }) {
       
 		setAllTask(
 			AllTask.filter(AllTask => {
-				if (AllTask.id !== id) return true;
+				if (AllTask !== id) return true;
 			})
         );
   };
@@ -49,7 +49,7 @@ export default function Login({ navigation }) {
     const data = {
       id: String(Date.now()),
       name: List,
-      contents:  JSON.stringify(AllTask)
+      contents:  AllTask
     }
 
     const realm = await getRealm()
@@ -121,13 +121,14 @@ export default function Login({ navigation }) {
 
             renderItem={({ item }) =>
             <View style={styles.Tasks}> 
-                <Text style={styles.Item}>
-                  {item.name}
+                <Text style={styles.Item}> 
+                  {item}
                 </Text>
-                <TouchableOpacity onPress={() => Deletitem(item.id)} >
+                <TouchableOpacity onPress={() => Deletitem(item)} >
                     <Icon name="trash" size={20} color="#DD0426" />
                 </TouchableOpacity>
             </View>}
+            keyExtractor={(item, index) => index.toString()}
             />
 
           <View style={styles.AddTask}>

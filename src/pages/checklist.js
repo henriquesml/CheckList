@@ -1,16 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 import getRealm from '../RealmDB/realm'
+import LinearGradient from 'react-native-linear-gradient';
+import Icon from 'react-native-vector-icons/FontAwesome'
 
 import { getStatusBarHeight } from 'react-native-status-bar-height'
 const distancia = 24 + getStatusBarHeight(true)
 
+import ListContent from '../components/ListContent'
 
 export default function checklist( { navigation } ) {
 
     const id = navigation.getParam('id')
 
     const [lista, setLista] = useState([]);
+
+    const [teste, setTest] = useState([]);
 
     useEffect(() => {
 
@@ -21,37 +26,77 @@ export default function checklist( { navigation } ) {
         const data = realm.objects('Listas').filtered(`id = "${id}"`);
         
         setLista(data)
-       
+        setTest(data[0].contents)
 
     }getList()
         
     }, [])
 
   return (
-    <KeyboardAvoidingView enabled={Platform.OS === 'ios'} behavior="padding" style={styles.container}>  
-        <FlatList 
-        data = {lista}
-        keyExtractor={ item => item.id }
-        contentContainerStyle={{paddingHorizontal: 20}}
-        showsHorizontalScrollIndicator={false}
-        renderItem={ ( { item } ) => (
-            <View>
-                <Text  > {item.name} </Text>
-                <Text  > {item.contents} </Text>
-            </View>
+    <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 1}} colors={['#006992', '#0087BC']} style={styles.linearGradient}>
 
-        )}
-        
-        />
-    </KeyboardAvoidingView>  
+      <FlatList style={styles.list}
+      data = {lista}
+      keyExtractor={ item => item.id }
+      contentContainerStyle={{paddingHorizontal: 20}}
+      showsHorizontalScrollIndicator={false}
+      renderItem={ ( { item } ) => (
+          <View>
+
+              <TouchableOpacity onPress={() => {navigation.navigate('Main')}}>
+                <Icon name="chevron-left" size={20} color="#FFF" />
+              </TouchableOpacity>
+
+            <Text style={styles.title} >{item.name}</Text>
+              {teste.map(content => <ListContent key={content} item={content}/> )}
+          </View>
+
+      )}
+      
+      />
+       
+    </LinearGradient>  
   );
 }
 
 const styles = StyleSheet.create({
-    container: {
-      flex:1,
-      alignItems:  'center',
-      paddingTop: distancia,
-      backgroundColor: '#EEE',
-    },
-  });
+  linearGradient: {
+    flex:1,
+    paddingTop: distancia
+  },
+  title: {
+    fontSize: 32,
+    color: '#FFF',
+    fontWeight: 'bold',
+    alignSelf: 'center',
+    paddingBottom: distancia
+
+  },
+  form: {
+    flexDirection: 'row',
+    marginTop: 10,
+    paddingHorizontal: 20
+
+  },
+  title2: {
+    flex: 1, 
+    padding: 12,
+    paddingHorizontal: 15,
+    borderRadius: 4,
+    fontSize: 16,
+    color: '#999',
+    backgroundColor: '#FFF'
+  },
+  button: {
+    backgroundColor: '#0090C9',
+    marginLeft: 10,
+    justifyContent: 'center',
+    borderRadius: 4,
+    paddingHorizontal: 20,
+    paddingVertical: 15
+  },
+  list : {
+    marginTop: 20,
+
+  }
+});
