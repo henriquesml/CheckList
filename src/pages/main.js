@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome'
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import LinearGradient from 'react-native-linear-gradient';
 import getRealm from '../RealmDB/realm'
+import { SwipeListView } from 'react-native-swipe-list-view'
 
 import Animacao from 'lottie-react-native'
 
@@ -14,6 +15,7 @@ const distancia = 30 + getStatusBarHeight(true)
 export default function Login({ navigation }) {
 
   const [lista, setLista] = useState([]);
+  const [reset, setReset] = useState(false);
 
   useEffect(() => {
 
@@ -25,11 +27,23 @@ export default function Login({ navigation }) {
       
       setLista(data)
 
-      console.log(lista)
+      setReset(false)
 
     }getList()
       
-  }, [])
+  }, [reset])
+
+  async function Delete(id){
+
+    const realm = await getRealm()
+
+    const select = realm.objects('Listas').filtered(`id = "${id}"`);
+
+    realm.write(() => {
+     realm.delete(select)
+    })
+    setReset(true)
+  }
 
   return (
 
@@ -43,16 +57,32 @@ export default function Login({ navigation }) {
           </TouchableOpacity>
         </View>
 
-        <FlatList style={styles.list}
+        <SwipeListView style={styles.list}
         data = {lista}
         keyExtractor={ item => item.id }
         contentContainerStyle={{paddingHorizontal: 20}}
         showsHorizontalScrollIndicator={false}
         renderItem={ ( { item } ) => (
 
-          <ListName data={item} />
+          <ListName data={item} in a SwipeListView />
 
         )}
+        renderHiddenItem={ (data, rowMap) => (
+          <View style={styles.Itens}>
+                <TouchableOpacity style={styles.excluir} onPress={() => {Delete(data['item'].id)}}>
+                    <Icon name="delete" size={25} color="#FFF" />
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.alterar} >
+                    <Icon name="pencil" size={25} color="#FFF" />
+                </TouchableOpacity>
+
+                <Text style={styles.layout}></Text>
+        
+          </View>
+        )}
+        rightOpenValue={-112}
+        
         
         />
 
@@ -100,5 +130,28 @@ const styles = StyleSheet.create({
   list : {
     marginTop: 20,
 
+  },
+  Itens: {
+    alignItems: 'flex-end',
+    flexDirection: 'row-reverse',
+    borderRadius: 4,
+  },
+  alterar: {
+    backgroundColor: '#DD9904',
+    justifyContent: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 28
+  },
+  excluir:{
+    backgroundColor: '#DD0426',
+    justifyContent: 'center',
+    paddingHorizontal: 15,
+    paddingVertical: 28
+  },
+  layout: {
+    backgroundColor: '#E9E9E9',
+    justifyContent: 'center',
+    paddingHorizontal: 150,
+    paddingVertical: 31
   }
 });

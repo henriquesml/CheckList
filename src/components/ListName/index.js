@@ -1,7 +1,6 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableHighlight, StyleSheet } from 'react-native';
 import { withNavigation } from 'react-navigation'
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 function List( {data, navigation} ) {
 
@@ -11,15 +10,15 @@ function handleNavigation(id) {
 }
 
   return (
-    <View style={styles.Container}>
+    <TouchableHighlight underlayColor='white' style={styles.Container} onPress={() => handleNavigation(data.id)} >
 
         <View style={styles.form}>
-            <Text style={styles.name} > {data.name} </Text>
-            <TouchableOpacity style={styles.button} onPress={() => handleNavigation(data.id)} >
-                <Icon name="format-list-checks" size={35} color="#36D800"/>
-            </TouchableOpacity>
+            
+           
+                <Text style={styles.name} > {data.name} </Text>
+         
         </View>
-    </View>
+    </TouchableHighlight>
   );
 }
 
@@ -29,7 +28,8 @@ const styles = StyleSheet.create({
         padding: 15,
         borderRadius: 4,
         backgroundColor: '#FFF',
-        marginBottom: 15
+        marginBottom: 15,
+        paddingVertical: 26
     },
     form: {
         flexDirection: 'row',
@@ -41,11 +41,9 @@ const styles = StyleSheet.create({
         fontSize: 18,
         lineHeight: 20,
         fontWeight: 'bold',
+        alignSelf: 'center'
     },
-    button : {
-        justifyContent: 'center',
-        paddingBottom: 4
-    }
+
 });
 
 export default withNavigation(List)
