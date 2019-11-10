@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, FlatList,TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import getRealm from '../RealmDB/realm'
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -17,6 +17,8 @@ export default function checklist( { navigation } ) {
 
     const [teste, setTest] = useState([]);
 
+    const [name, setName] = useState([]);
+
     useEffect(() => {
 
     async function getList() {
@@ -27,6 +29,7 @@ export default function checklist( { navigation } ) {
         
         setLista(data)
         setTest(data[0].contents)
+        setName(data[0].name)
 
     }getList()
         
@@ -35,6 +38,16 @@ export default function checklist( { navigation } ) {
   return (
     <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 1}} colors={['#006992', '#0087BC']} style={styles.linearGradient}>
 
+      <View  style={styles.Head}>
+
+      <TouchableOpacity style={{marginTop: distancia}} onPress={() => {navigation.navigate('Main')}}>
+        <Icon name="chevron-left" size={20} color="#FFF" />
+      </TouchableOpacity>
+
+      <Text style={styles.title} >{name}</Text>
+
+      </View>
+
       <FlatList style={styles.list}
       data = {lista}
       keyExtractor={ item => item.id }
@@ -42,12 +55,6 @@ export default function checklist( { navigation } ) {
       showsHorizontalScrollIndicator={false}
       renderItem={ ( { item } ) => (
           <View>
-
-              <TouchableOpacity onPress={() => {navigation.navigate('Main')}}>
-                <Icon name="chevron-left" size={20} color="#FFF" />
-              </TouchableOpacity>
-
-            <Text style={styles.title} >{item.name}</Text>
               {teste.map(content => <ListContent key={content} item={content}/> )}
           </View>
 
@@ -63,6 +70,13 @@ const styles = StyleSheet.create({
   linearGradient: {
     flex:1,
     paddingTop: distancia
+  },
+  Head: {
+    height: '10%',
+    width: "100%",
+    paddingHorizontal: 15,
+    marginBottom: distancia
+
   },
   title: {
     fontSize: 32,

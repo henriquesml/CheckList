@@ -6,7 +6,10 @@ import getRealm from '../RealmDB/realm'
 import { getStatusBarHeight } from 'react-native-status-bar-height'
 const distancia = 24 + getStatusBarHeight(true)
 
-export default function Login({ navigation }) {
+export default function List({ navigation }) {
+
+  const name = navigation.getParam('name')
+
   const [task, setTask] = useState('');
   const [List, setList] = useState('');
   const [AllTask, setAllTask] = useState([]);
@@ -22,7 +25,11 @@ export default function Login({ navigation }) {
     } else {
 
       setaparecerBotao(false)
-    }
+
+      if (name != 'Crie uma lista'){
+        setList(name)
+      } 
+    } 
       
   }, [AllTask])
 
@@ -167,9 +174,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: 'space-between',
     paddingHorizontal: 15,
-
-  },
-  boxhead: {
 
   },
   TexteHead: {

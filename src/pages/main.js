@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import LinearGradient from 'react-native-linear-gradient';
 import getRealm from '../RealmDB/realm'
@@ -16,6 +16,7 @@ export default function Login({ navigation }) {
 
   const [lista, setLista] = useState([]);
   const [reset, setReset] = useState(false);
+  const [name, setName] = useState('Crie uma lista');
 
   useEffect(() => {
 
@@ -51,10 +52,22 @@ export default function Login({ navigation }) {
         <Text style={styles.title} >Listas</Text>
 
           <View style={styles.form}>
-          <Text style={styles.title2}>Crie uma lista</Text>
-          <TouchableOpacity onPress={() => {navigation.navigate('List')}} style={styles.button}>
-            <Icon name="plus" size={18} color="#FFF"/>
-          </TouchableOpacity>
+            <View style={styles.title2}>
+
+              <TextInput style={styles.teste}
+                          
+                onChangeText={setName}
+                value={name}
+                placeholder="Crie uma lista"
+                placeholderTextColor="#FFF"
+                returnKeyType="done"
+                returnKeyLabel="done"
+              />
+            </View>
+
+            <TouchableOpacity onPress={() => {navigation.navigate('List', { name })}} style={styles.button}>
+              <Icon name="plus" size={18} color="#FFF"/>
+            </TouchableOpacity>
         </View>
 
         <SwipeListView style={styles.list}
@@ -115,9 +128,12 @@ const styles = StyleSheet.create({
     padding: 12,
     paddingHorizontal: 15,
     borderRadius: 4,
+    backgroundColor: '#FFF',
+    paddingVertical: 1,
+  },
+  teste : {
     fontSize: 16,
     color: '#999',
-    backgroundColor: '#FFF'
   },
   button: {
     backgroundColor: '#0090C9',
@@ -149,7 +165,7 @@ const styles = StyleSheet.create({
     paddingVertical: 28
   },
   layout: {
-    backgroundColor: '#E9E9E9',
+    backgroundColor: '#FFF',
     justifyContent: 'center',
     paddingHorizontal: 150,
     paddingVertical: 31
