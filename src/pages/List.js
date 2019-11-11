@@ -26,7 +26,7 @@ export default function List({ navigation }) {
 
       setaparecerBotao(false)
 
-      if (name != 'Crie uma lista'){
+      if (name != ''){
         setList(name)
       } 
     } 

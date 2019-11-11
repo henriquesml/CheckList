@@ -16,7 +16,7 @@ export default function Login({ navigation }) {
 
   const [lista, setLista] = useState([]);
   const [reset, setReset] = useState(false);
-  const [name, setName] = useState('Crie uma lista');
+  const [name, setName] = useState('');
 
   useEffect(() => {
 
@@ -59,7 +59,7 @@ export default function Login({ navigation }) {
                 onChangeText={setName}
                 value={name}
                 placeholder="Crie uma lista"
-                placeholderTextColor="#FFF"
+                placeholderTextColor="#999"
                 returnKeyType="done"
                 returnKeyLabel="done"
               />
