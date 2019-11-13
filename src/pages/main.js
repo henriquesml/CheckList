@@ -75,6 +75,7 @@ export default function Login({ navigation }) {
         keyExtractor={ item => item.id }
         contentContainerStyle={{paddingHorizontal: 20}}
         showsHorizontalScrollIndicator={false}
+        disableRightSwipe={true}
         renderItem={ ( { item } ) => (
 
           <ListName data={item} in a SwipeListView />
@@ -95,8 +96,6 @@ export default function Login({ navigation }) {
           </View>
         )}
         rightOpenValue={-112}
-        
-        
         />
 
     </LinearGradient>     
