@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, FlatList, TouchableOpacity, StyleSheet, Keyboard, KeyboardAvoidingView, Platform, StatusBar } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome'
-import getRealm from '../RealmDB/realm'
+import getRealm from '../../RealmDB/realm'
 
 import { getStatusBarHeight } from 'react-native-status-bar-height'
 const distancia = 24 + getStatusBarHeight(true)
@@ -77,7 +77,6 @@ export default function List({ navigation }) {
     } else {
       setcolor('#DD0426')
     }
-
 
   };
 

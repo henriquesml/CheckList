@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList,TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import getRealm from '../RealmDB/realm'
+import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
+import getRealm from '../../RealmDB/realm'
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/FontAwesome'
+import ListContent from '../../components/ListContent'
 
 import { getStatusBarHeight } from 'react-native-status-bar-height'
 const distancia = 24 + getStatusBarHeight(true)
-
-import ListContent from '../components/ListContent'
 
 export default function checklist( { navigation } ) {
 

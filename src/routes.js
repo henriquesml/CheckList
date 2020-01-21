@@ -1,9 +1,9 @@
 import { createAppContainer, createSwitchNavigator } from 'react-navigation'
 
-import Splash from './pages//splash'
-import Main from './pages/main'
-import List from './pages/List'
-import CheckList from './pages/checklist'
+import Splash from './pages/splash/splash'
+import Main from './pages/main/main'
+import List from './pages/list/list'
+import CheckList from './pages/checklist/checklist'
 
 const Routes = createAppContainer(
     createSwitchNavigator({

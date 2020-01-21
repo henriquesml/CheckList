@@ -2,12 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import LinearGradient from 'react-native-linear-gradient';
-import getRealm from '../RealmDB/realm'
+import getRealm from '../../RealmDB/realm'
 import { SwipeListView } from 'react-native-swipe-list-view'
 
-import Animacao from 'lottie-react-native'
-
-import ListName from '../components/ListName'
+import ListName from '../../components/ListName'
 
 import { getStatusBarHeight } from 'react-native-status-bar-height'
 const distancia = 30 + getStatusBarHeight(true)
